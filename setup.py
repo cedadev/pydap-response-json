@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 if __name__ == "__main__":
     setup(
         name = 'pydap-response-json',
-        version = version,
+        version = '0.0.1',
         description = 'JSON response type for PyDAP',
         classifiers = [
             "Programming Language :: Python",
