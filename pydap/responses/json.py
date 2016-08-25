@@ -1,9 +1,10 @@
 import itertools
+from simplejson import dumps
 
 import numpy
 
 from pydap.model import *
-from pydap.lib import INDENT, encode_atom
+from pydap.lib import INDENT, encode_atom, walk
 from pydap.responses.dds import dispatch as dds_dispatch
 from pydap.responses.lib import BaseResponse
 
@@ -11,21 +12,15 @@ from pydap.responses.lib import BaseResponse
 class JSONResponse(BaseResponse):
     def __init__(self, dataset):
         BaseResponse.__init__(self, dataset)
-        self.headers.extend([
-                ('Content-description', 'dods_ascii'),
-                ('Content-type', 'text/plain'),
-                ])
+        self.headers.append(('Content-type', 'application/json'))
 
     @staticmethod
     def serialize(dataset):
-        # Generate DDS.
-        for line in dds_dispatch(dataset):
-            yield line
-        yield 45 * '-'
-        yield '\n'
-        for line in dispatch(dataset):
-            yield line
+        attributes = {}
+        for child in walk(dataset):
+            attributes[child.id] = child.attributes
         if hasattr(dataset, 'close'): dataset.close()
+        return [dumps(attributes)]
 
 
 def dispatch(var, printname=True):
