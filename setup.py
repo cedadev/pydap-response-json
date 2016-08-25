@@ -22,6 +22,6 @@ if __name__ == "__main__":
         install_requires = ['pydap'],
         entry_points="""
             [pydap.response]
-            json = pydap.responses.json:JSONHandler
+            json = pydap.responses.json:JSONResponse
         """,
     )
